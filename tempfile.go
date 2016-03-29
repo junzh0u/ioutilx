@@ -20,6 +20,20 @@ func TempFile(dir, prefix string) (string, error) {
 	return file.Name(), file.Close()
 }
 
+// TempFileWithContent calls TempFile to create a temporary file and fill it
+// with the content given, and returns the filepath
+func TempFileWithContent(dir, prefix, content string) (string, error) {
+	path, err := TempFile(dir, prefix)
+	if err != nil {
+		return "", err
+	}
+	err = ioutil.WriteFile(path, []byte(content), 0644)
+	if err != nil {
+		return "", err
+	}
+	return path, nil
+}
+
 // TempDir is a wrapper of ioutil.TempDir with 1 difference:
 // 1. It will create the directory if dir doesn't exist
 func TempDir(dir, prefix string) (string, error) {
